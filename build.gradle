@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.12-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
     id 'com.modrinth.minotaur' version "2.+"
     id 'maven-publish'
 }
@@ -13,7 +13,7 @@ base {
 
 modrinth { // For me: Remember to set $MODRINTH_TOKEN !!!
     projectId = 'translatabledebugoptions'
-    uploadFile = remapJar
+    //uploadFile = remapJar
     gameVersions = project.supported_versions.split(",").toList()
     loaders = ['fabric']
     dependencies {
@@ -24,9 +24,8 @@ modrinth { // For me: Remember to set $MODRINTH_TOKEN !!!
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    runtimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
@@ -42,7 +41,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly

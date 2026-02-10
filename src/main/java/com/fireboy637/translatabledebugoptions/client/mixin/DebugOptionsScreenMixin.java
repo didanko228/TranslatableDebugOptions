@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -22,8 +22,8 @@ public class DebugOptionsScreenMixin {
     @Mixin(targets = "net/minecraft/client/gui/screens/debug/DebugOptionsScreen$OptionEntry", priority = 999999)
     public static class OptionEntryMixin {
         // Need to use @WarpOperation instead of @Redirect here, or it will be broken by Fabric API
-        @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/ResourceLocation;getPath()Ljava/lang/String;"))
-        private String entryNameHandler(ResourceLocation instance, Operation<String> original) {
+        @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/Identifier;getPath()Ljava/lang/String;"))
+        private String entryNameHandler(Identifier instance, Operation<String> original) {
             String key = getKey(instance);
             String translatedStr = Component.translatable(key).getString();
 
@@ -42,7 +42,7 @@ public class DebugOptionsScreenMixin {
     public static class OptionsListMixin {
         // Allow searching with both original and translated strings, and it's case-insensitive!
         @WrapOperation(method = "updateSearch", at = @At(value = "INVOKE", target = "Ljava/lang/String;contains(Ljava/lang/CharSequence;)Z"))
-        private boolean searchHandler(String originalStr, CharSequence searchCharSeq, Operation<Boolean> original, @Local Map.Entry<ResourceLocation, DebugScreenEntry> entry) {
+        private boolean searchHandler(String originalStr, CharSequence searchCharSeq, Operation<Boolean> original, @Local Map.Entry<Identifier, DebugScreenEntry> entry) {
             String searchStrLower = ((String) searchCharSeq).toLowerCase();
             String translatedStrLower = Component.translatable(getKey(entry.getKey())).getString().toLowerCase();
 
